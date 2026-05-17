@@ -19,20 +19,22 @@ def add_job():
     company = request.form.get("company")
     position = request.form.get("position")
     status = request.form.get("status")
+
     # Grab the date from the form; if empty, use today's date
     date_applied = request.form.get("date")
     if not date_applied:
         date_applied = datetime.now().strftime("%Y-%m-%d")
-    
+
     if company and position:
         new_id = max([job['id'] for job in jobs], default=0) + 1
         jobs.append({
-            "id": new_id, 
-            "company": company, 
-            "position": position, 
-            "status": status, 
+            "id": new_id,
+            "company": company,
+            "position": position,
+            "status": status,
             "date": date_applied
         })
+
     return redirect(url_for("home"))
 
 @app.route("/delete/<int:job_id>")
