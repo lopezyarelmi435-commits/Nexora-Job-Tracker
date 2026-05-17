@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nexora Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Ensuring layout stays in 3 columns */
+        .kanban-board {
+            display: flex !important; 
+            flex-direction: row !important;
+            gap: 20px !important;
+            align-items: flex-start !important;
+            width: 100% !important;
+        }
+        .column {
+            flex: 1 !important;
+            background: #ebedf0;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 70vh;
+        }
+        .job-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+            border-bottom: 2px solid #dfe1e6;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            color: #ff4d4d;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .delete-btn:hover { color: #cc0000; }
+    </style>
+</head>
+<body style="background-color: #f4f7f9; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 20px;">
+    <div class="container" style="max-width: 1250px; margin: 0 auto;">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+            <h1 style="margin: 0; font-size: 2.2rem;">Nex<span style="color: #4c9aff;">ora</span></h1>
+            
+            <form action="/add" method="POST" style="display: flex; gap: 10px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex-wrap: wrap;">
+                <input type="text" name="company" placeholder="Company" required style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <input type="text" name="position" placeholder="Role" required style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <input type="date" name="date" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <select name="status" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; background: white;">
+                    <option value="Wishlist">Wishlist</option>
+                    <option value="Applied">Applied</option>
+                    <option value="Interviewing">Interviewing</option>
+                </select>
+                <button type="submit" style="background: #4c9aff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 800;">Add Job</button>
+            </form>
+        </header>
+
+        <div class="kanban-board">
+            <div class="column">
+                <h2 style="font-size: 0.85rem; text-transform: uppercase; color: #5e6c84; margin-bottom: 20px; letter-spacing: 1px;">Target Roles</h2>
+                {% for job in jobs if job.status == 'Wishlist' %}
+                <div class="job-card">
+                    <a href="{{ url_for('delete_job', job_id=job.id) }}" class="delete-btn" title="Delete Application">×</a>
+                    <h3 style="margin: 0; font-size: 1.05rem; color: #172b4d;">{{ job.company }}</h3>
+                    <p style="margin: 6px 0; color: #5e6c84; font-size: 0.9rem;">{{ job.position }}</p>
+                    <small style="color: #a5adba; font-weight: 600;">📅 {{ job.date }}</small>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="column">
+                <h2 style="font-size: 0.85rem; text-transform: uppercase; color: #5e6c84; margin-bottom: 20px; letter-spacing: 1px;">Applied</h2>
+                {% for job in jobs if job.status == 'Applied' %}
+                <div class="job-card">
+                    <a href="{{ url_for('delete_job', job_id=job.id) }}" class="delete-btn">×</a>
+                    <h3 style="margin: 0; font-size: 1.05rem; color: #172b4d;">{{ job.company }}</h3>
+                    <p style="margin: 6px 0; color: #5e6c84; font-size: 0.9rem;">{{ job.position }}</p>
+                    <small style="color: #a5adba; font-weight: 600;">📅 {{ job.date }}</small>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="column">
+                <h2 style="font-size: 0.85rem; text-transform: uppercase; color: #5e6c84; margin-bottom: 20px; letter-spacing: 1px;">Interviewing</h2>
+                {% for job in jobs if job.status == 'Interviewing' %}
+                <div class="job-card">
+                    <a href="{{ url_for('delete_job', job_id=job.id) }}" class="delete-btn">×</a>
+                    <h3 style="margin: 0; font-size: 1.05rem; color: #172b4d;">{{ job.company }}</h3>
+                    <p style="margin: 6px 0; color: #5e6c84; font-size: 0.9rem;">{{ job.position }}</p>
+                    <small style="color: #a5adba; font-weight: 600;">📅 {{ job.date }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
